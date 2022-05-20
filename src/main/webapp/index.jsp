@@ -1,5 +1,8 @@
 <html>
 <body>
-<h2>Hello World!</h2>
+<h2>Menu</h2>
+<a href="/people/">People list</a>
+<br/>
+<a href="/book/">Book list</a>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package org.danilyuk.library.dao;
 
+import org.danilyuk.library.models.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.danilyuk.library.models.Person;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Neil Alishev
@@ -29,17 +31,23 @@ public class PersonDAO {
         return jdbcTemplate.query("SELECT * FROM Person WHERE id=?", new Object[]{id}, new BeanPropertyRowMapper<>(Person.class)).stream().findAny().orElse(null);
     }
 
+    public Optional<Person> show(String name) {
+        return jdbcTemplate.query("select * from person where name = ?", new Object[]{name}, new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
+    }
+
     public void save(Person person) {
-        jdbcTemplate.update("INSERT INTO Person VALUES(1, ?, ?, ?)", person.getName(), person.getAge(),
-                person.getEmail());
+        jdbcTemplate.update("INSERT INTO Person(name,birth_year) VALUES(?, ?)", person.getName(), person.getBirth_year());
     }
 
     public void update(int id, Person updatedPerson) {
-        jdbcTemplate.update("UPDATE Person SET name=?, age=?, email=? WHERE id=?", updatedPerson.getName(),
-                updatedPerson.getAge(), updatedPerson.getEmail(), id);
+        jdbcTemplate.update("UPDATE Person SET name=?, birth_year=? where id = ?", updatedPerson.getName(),updatedPerson.getBirth_year(), id);
     }
 
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM Person WHERE id=?", id);
+    }
+
+    public List<Book> personBook(int idPerson) {
+        return jdbcTemplate.query("SELECT * FROM Book where idperson = ?", new Object[] {idPerson},new BeanPropertyRowMapper<>(Book.class));
     }
 }
