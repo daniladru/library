@@ -1,22 +1,31 @@
 package org.danilyuk.library.models;
 
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.List;
 
-/**
- * @author Neil Alishev
- */
+@Entity
+@Table(name = "person")
 public class Person {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @NotEmpty(message = "Name should not be empty")
     @Size(min = 2, max = 150, message = "Name should be between 2 and 150 characters")
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "birth_year")
     @Min(value = 1900, message = "Birth year should be greater than 1900")
     private int birth_year;
+
+    @OneToMany(mappedBy = "person")
+    private List<Book> books;
 
     public Person() {
     }
@@ -49,5 +58,13 @@ public class Person {
 
     public void setBirth_year(int birth_year) {
         this.birth_year = birth_year;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 }
